@@ -189,16 +189,17 @@ impl StarkNetLightClientImpl {
         method_name: &str,
         client_error: ProviderError<JsonRpcClientError<ReqwestError>>,
     ) -> JsonRpcError {
-        error!(
+        dbg!(
             "StarkNetLightClientImpl error on method {}: {:#?}",
-            method_name, &client_error
+            method_name,
+            &client_error
         );
         let error = JsonRpcError::try_from(JsonRpcClientErrorWrapper::from(client_error));
         match error {
             Ok(rpc_error) => rpc_error,
             Err(unknown_error) => JsonRpcError {
                 code: 520,
-                message: format!("[{}] {}", method_name, unknown_error),
+                message: format!("[{}] {}", method_name, unknown_error.message),
             },
         }
     }
